@@ -146,10 +146,30 @@ The deposit data for a key is the public half. The seed, the keystore, and the p
 
 At most eight new keys activate in one epoch. One deposit is not instant. A crowd is slower, because the set is meant to stay legible.
 
+## The code in this repository
+
+`protocol/` is the public slice of the chain rules. It is enough to see the locks work. It is not a node, and it will not start a second network.
+
+| File | What it shows |
+| --- | --- |
+| `protocol/keys.mjs` | Creates an ML-DSA-87 key, signs a 32-byte root, and checks the signature. The public key is 2,592 bytes. The signature is 4,627 bytes. |
+| `protocol/ssz.mjs` | Binds a duty to fork version `0x10000038` and to a stake of 40,000 KALYX. A signature for another fork is a signature over different bytes. |
+| `protocol/duty.mjs` | Turns a proposal, an attestation, or a randao reveal into the root those bytes must cover. |
+| `protocol/policy.mjs` | Refuses a second block at the same height, and refuses a vote that surrounds another vote from the same key. |
+
+On Node 24 or newer:
+
+```bash
+cd protocol
+npm test
+```
+
+The test creates a key in memory, signs the deposit root for this fork, checks that the signature verifies, and checks that the wrong passphrase does not open the key file. It then refuses a second proposal for a slot that already has one. Nothing is written to disk. Nothing in that test is a key from the running chain.
+
 ## What this repository is
 
-This repository is the public account of the testnet: the mark, the locks, the weight, and the bounds a reader can check against the explorer.
+This repository is the public account of the testnet: the mark, the locks, the weight, and the checks a reader can run.
 
-It does not contain a node, a genesis, a key, or a way to start a second copy of the chain. Cloning it will not produce blocks. The chain that is producing blocks is the one the explorer is reading, chain id 21520.
+It does not contain a node, a genesis, a validator key from the running chain, or a way to start a second copy. Cloning it will not produce blocks. The chain that is producing blocks is the one the explorer is reading, chain id 21520.
 
 The longer pages live at [kalyx.si/docs](https://kalyx.si/docs). Where a page on the site and a block in the explorer disagree, believe the block.
