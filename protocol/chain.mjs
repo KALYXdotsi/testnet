@@ -1,0 +1,14 @@
+export const CHAIN_ID = 21520;
+export const SLOT_SECONDS = 10;
+export const SLOTS_PER_EPOCH = 8;
+export const GENESIS_VALIDATORS = 2;
+export const BLOCK_GAS_LIMIT = 30_000_000;
+export const FORK_VERSION = "0x10000038";
+export const GENESIS_SUPPLY_KALYX = 500_000_000n;
+export const MAX_EFFECTIVE_KALYX = 40_000n;
+export const EJECTION_KALYX = 20_000n;
+export const MAX_ACTIVATIONS_PER_EPOCH = 8;
+export const TRANSACTION_TYPE = "0x2";
+export const STARTING_BASE_FEE_GWEI = 1n;
+export const WEI_PER_KALYX = 10n ** 18n;
+export const GWEI_PER_KALYX = 1_000_000_000n;

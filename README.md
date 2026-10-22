@@ -115,9 +115,9 @@ When the account signs with XMSS, that signature consumes one leaf whether or no
 
 ## Contracts
 
-The wallet on the explorer can publish contract bytecode from a spending account. The transaction has no recipient. The data is the bytecode, as hex that starts with `0x`. A person check runs first. The seed stays in the tab. After the node accepts it, the transaction page shows the new address once a receipt exists.
+The wallet on the explorer can compile one Solidity file in the browser and publish the bytecode from a spending account. The compiler is Solidity 0.8.26. The target is London. The source stays in the browser, and the file cannot import another file. A constructor that takes arguments is not filled in on this page. The transaction has no recipient. The data is the bytecode, as hex that starts with `0x`. A person check runs first. The seed stays in the tab. After the node accepts it, the transaction page shows the new address once a receipt exists.
 
-Reading a contract does not spend a leaf. Sending call data does. The page does not include a compiler, a verifier, or a catalog of projects. Compile elsewhere and bring the bytecode. An address that holds code is reported by the explorer as a byte count. That record is the code itself.
+Reading a contract does not spend a leaf. Sending call data does. The page does not check the source against the bytecode, and it does not keep a catalog of projects. An address that holds code is reported by the explorer as a byte count. That record is the code itself.
 
 Publishing a contract does not make the author a validator. A contract is not the 40,000 KALYX deposit, and it is not an ML-DSA-87 key.
 
@@ -156,6 +156,8 @@ At most eight new keys activate in one epoch. One deposit is not instant. A crow
 | `protocol/ssz.mjs` | Binds a duty to fork version `0x10000038` and to a stake of 40,000 KALYX. A signature for another fork is a signature over different bytes. |
 | `protocol/duty.mjs` | Turns a proposal, an attestation, or a randao reveal into the root those bytes must cover. |
 | `protocol/policy.mjs` | Refuses a second block at the same height, and refuses a vote that surrounds another vote from the same key. |
+| `protocol/chain.mjs` | The public numbers: chain id 21520, a 10 second slot, an epoch of 8 slots, a gas limit of 30,000,000, and a genesis supply of 500,000,000 KALYX. |
+| `protocol/deposit.mjs` | Checks a deposit file for fork version `0x10000038`, a 2,592 byte key, a 4,627 byte signature, and a stake of 40,000 KALYX, then builds the call data. |
 
 On Node 24 or newer:
 
@@ -164,7 +166,7 @@ cd protocol
 npm test
 ```
 
-The test creates a key in memory, signs the deposit root for this fork, checks that the signature verifies, and checks that the wrong passphrase does not open the key file. It then refuses a second proposal for a slot that already has one. Nothing is written to disk. Nothing in that test is a key from the running chain.
+The test creates a key in memory, signs the deposit root for this fork, checks that the signature verifies, and checks that the wrong passphrase does not open the key file. It then refuses a second proposal for a slot that already has one. It also refuses a deposit file for the wrong fork or the wrong amount. Nothing is written to disk. Nothing in that test is a key from the running chain.
 
 ## What this repository is
 
